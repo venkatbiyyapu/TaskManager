@@ -15,7 +15,7 @@ mongoose.connect("mongodb://localhost:27017/TaskTracker",{ useNewUrlParser: true
     console.error('MongoDB connection error:', err);
   });
   
-app.post("/login",(req,res)=>{
+app.post("/login",async(req,res)=>{
     console.log(req.body)
     return res.json(req.body)
 })
