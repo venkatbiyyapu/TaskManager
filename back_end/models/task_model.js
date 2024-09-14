@@ -16,7 +16,7 @@ var task_schema = new schema({
     required: true
    },
    phone:{
-    type: Number,
+    type: String,
     required: true
    }
 })

@@ -2,10 +2,19 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const navigate = useNavigate()
-    const [error, setError] = useState(false)
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const navigate = useNavigate();
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const handleInputChange = (e, setter) => {
+        setter(e.target.value);
+        if (error) {
+            setError(false);
+            setErrorMessage('');
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,26 +28,22 @@ function Login() {
             });
 
             const data = await response.json();
-            if (data) {
+            if (response.ok) { 
                 console.log(data);
-                // localStorage.setItem('token', data.token);
                 navigate('/dashboard');
             } else {
                 setError(true);
-                alert(data.message);
+                setErrorMessage(data.message || "Invalid username or password");
             }
         } catch (error) {
+            setError(true);
+            setErrorMessage("An unexpected error occurred. Please try again.");
             console.error('Error:', error);
         }
     };
 
     return (
         <div className="container">
-            {error && (
-                <p style={{ color: 'red' }}>
-                    Invalid username or password
-                </p>
-            )}
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Email:</label>
@@ -47,7 +52,7 @@ function Login() {
                         value={email}
                         placeholder="email"
                         autoComplete="on"
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => handleInputChange(e, setEmail)}
                         required
                     />
                 </div>
@@ -57,10 +62,15 @@ function Login() {
                         type="password"
                         value={password}
                         placeholder="password"
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => handleInputChange(e, setPassword)}
                         required
                     />
                 </div>
+                {error && (
+                    <p style={{ color: 'red' }}>
+                        {errorMessage}
+                    </p>
+                )}
                 <button type="submit">Log In</button>
                 <p>
                     Don't have an account? <Link to="/signup">Sign Up</Link>
@@ -68,7 +78,6 @@ function Login() {
             </form>
         </div>
     );
-};
-
+}
 
 export default Login;
