@@ -27,11 +27,15 @@ function Login() {
                 body: JSON.stringify({ email, password }),
             });
 
-            const data = await response.json();
             if (response.ok) { 
-                console.log(data);
-                navigate('/dashboard');
+                const data = await response.json();
+                const {user,token}= data
+                console.log(data.user);
+                console.log(user._id);
+                console.log(token);
+                navigate('/dashboard',{state:{fullName: user.fullName, id: user._id}});
             } else {
+                const data = await response.json();
                 setError(true);
                 setErrorMessage(data.message || "Invalid username or password");
             }

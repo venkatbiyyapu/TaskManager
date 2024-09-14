@@ -1,9 +1,16 @@
-import React from 'react'
+import React from 'react';
+import { useLocation } from 'react-router-dom';
 
-export default function Dashboard() {
-  return (
-    <div>
-      Dashboard
-    </div>
-  )
-}
+const Dashboard = () => {
+    const location = useLocation();
+    const { fullName, id } = location.state || {};
+
+    return (
+        <div className="dashboard">
+            <h1>Welcome, {fullName}</h1>
+            <p>Your ID is: {JSON.stringify(id)}</p>
+        </div>
+    );
+};
+
+export default Dashboard;

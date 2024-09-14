@@ -31,12 +31,12 @@ function SignUp() {
                 },
                 body: JSON.stringify({ fullName, phone, email, password }),
             });
-
-            const data = await response.json();
-            if (data) {
+            if (response.ok) {
+                const data = await response.json();
                 console.log(data);
-                navigate('/dashboard');
+                navigate('/login');
             } else {
+                const data = await response.json();
                 setError(true);
                 setErrorMessage(data.message || "Invalid username or password");
             }
