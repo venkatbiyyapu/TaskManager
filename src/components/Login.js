@@ -29,12 +29,10 @@ function Login() {
                 const data = await response.json();
                 const { user, token } = data;
 
-                localStorage.setItem('token', token); // Store token in localStorage
+                localStorage.setItem('token', token);
                 localStorage.setItem('userId', user._id);
-                // Navigate to dashboard with user details
                 navigate('/dashboard', {
                     state: {
-                        // fullName: user.fullName,
                         id: user._id,
                     }
                 });

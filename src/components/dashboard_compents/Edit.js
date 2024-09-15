@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import handleDate from '../utils/date';
 
 export default function Edit() {
     const location = useLocation();
-    // const { selectedTask, id} = location.state || {};
-    const { selectedTask } = location.state || {};
+    const { selectedTask, filterStatus, filterPriority , sortOrder } = location.state || {};
     const id = localStorage.getItem("userId");
     const [title, setTitle] = useState(selectedTask.title);
     const [description, setDescription] = useState(selectedTask.description);
     const [status, setStatus] = useState(selectedTask.status);
     const [priority, setPriority] = useState(selectedTask.priority);
-    console.log(priority);
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
@@ -21,9 +19,7 @@ export default function Edit() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const taskData = { title, description, dueDate, status, priority};
-
-        const token = localStorage.getItem('token');  // Retrieve token from localStorage
-
+        const token = localStorage.getItem('token');
         try {
             const response = await fetch(`../../editTask/${selectedTask._id}`, {
                 method: 'PUT',
@@ -35,8 +31,7 @@ export default function Edit() {
             });
             const data = await response.json();
             if (response.ok) {
-                // navigate('/dashboard', { state: { fullName} });
-                navigate('/dashboard', { state: { id , message : data.message} });
+                navigate('/dashboard', { state: { id , message : data.message, filterStatus, filterPriority , sortOrder} });
             } else {
                 setError(data.message || 'Failed to edit task');
             }
@@ -94,7 +89,7 @@ export default function Edit() {
 
                 </div>
                 <button type="submit">Save</button>
-                <Link to="/dashboard">Cancel</Link>
+                <Link to="/dashboard" state={{filterStatus , filterPriority , sortOrder}} >Cancel</Link>
             </form>
         </div>
     );

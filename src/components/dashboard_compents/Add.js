@@ -10,7 +10,7 @@ export default function Add() {
   const [dueDate, setDueDate] = useState('');
   const [status, setStatus] = useState('To Do');
   const [priority, setPriority] = useState('High');
-
+  const {filterStatus, filterPriority , sortOrder } = location.state || {};
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -29,9 +29,8 @@ export default function Add() {
       });
       const data = await response.json();
       if (response.ok) {
-        // navigate('/dashboard');
-        navigate('/dashboard', { state: { id, message:data.message} });
-        // navigate('/dashboard', { state: { fullName} });
+        navigate('/dashboard', { state: {message:data.message, filterStatus, filterPriority, sortOrder
+        } });
       } else {
         setError(data.message || 'Failed to add task');
       }
@@ -88,7 +87,7 @@ export default function Add() {
           </select>
         </div>
         <button type="submit">Add</button>
-        <Link to="/dashboard">Cancel</Link>
+        <Link to="/dashboard" state={{filterStatus , filterPriority , sortOrder}}>Cancel</Link>
       </form>
     </div>
   );

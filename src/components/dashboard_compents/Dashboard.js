@@ -6,16 +6,16 @@ import { IoCheckmarkDoneSharp } from "react-icons/io5";
 import handleDate from '../utils/date';
 
 const Dashboard = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
     const [taskList, setTaskList] = useState([]);
     const [selectedTask, setSelectedTask] = useState(null);
     const [userDetails, setUserDetails] = useState({});
-    const [filterStatus, setFilterStatus] = useState('');
-    const [filterPriority, setFilterPriority] = useState('');
-    const [sortOrder, setSortOrder] = useState('asc');
-    const location = useLocation();
+    const [filterStatus, setFilterStatus] = useState(location.state?.filterStatus ||'');
+    const [filterPriority, setFilterPriority] = useState(location.state?.filterPriority ||'');
+    const [sortOrder, setSortOrder] = useState(location.state?.sortOrder || "asc");
     const [message, setMessage] = useState(location.state?.message || '');
     const id = localStorage.getItem("userId");
-    const navigate = useNavigate();
     const token = localStorage.getItem('token');
 
     const imgStatus = {
@@ -28,6 +28,12 @@ const Dashboard = () => {
         "Medium": 'orange',
         "Low": "green"
     };
+
+    const clearFilter = ()=>{
+        setFilterPriority('');
+        setFilterStatus("");
+        setSortOrder("asc");
+    }
 
     useEffect(() => {
         const fetchUserDetails = async () => {
@@ -95,7 +101,7 @@ const Dashboard = () => {
     };
 
     const handleEdit = () => {
-        navigate(`/dashboard/edit/${selectedTask._id}`, { state: { selectedTask, id } });
+        navigate(`/dashboard/edit/${selectedTask._id}`, { state: { selectedTask, filterStatus, filterPriority , sortOrder } });
     };
 
     const handleDelete = async () => {
@@ -171,6 +177,7 @@ const Dashboard = () => {
                 <button onClick={() => setSortOrder('asc')}>Low to High</button>
                 <button onClick={() => setSortOrder('desc')}>High to Low</button>
             </div>
+            <button onClick={clearFilter}>Clear Filters</button>
 
             <div>
                 {sortedTasks.length > 0 ? (
@@ -221,7 +228,7 @@ const Dashboard = () => {
             {message && (
                 <p style={{ color: 'red' }}>{message}</p>
             )}
-            <Link to='/dashboard/add' state={id}>
+            <Link to='/dashboard/add' state={{filterStatus , filterPriority , sortOrder}}>
                 Add Task
             </Link>
         </div>
