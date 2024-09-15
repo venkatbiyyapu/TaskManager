@@ -1,16 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { MdListAlt } from "react-icons/md";
+import { RiProgress5Line } from "react-icons/ri";
+import { IoCheckmarkDoneSharp } from "react-icons/io5";
 import handleDate from '../utils/date';
 
 const Dashboard = () => {
     const [taskList, setTaskList] = useState([]);
     const [selectedTask, setSelectedTask] = useState(null);
     const [userDetails, setUserDetails] = useState({});
-     const location = useLocation();
+    const [filterStatus, setFilterStatus] = useState('');
+    const [filterPriority, setFilterPriority] = useState('');
+    const [sortOrder, setSortOrder] = useState('asc');
+    const location = useLocation();
     const [message, setMessage] = useState(location.state?.message || '');
     const id = localStorage.getItem("userId");
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
+
+    const imgStatus = {
+        "To Do": MdListAlt,
+        "In Progress": RiProgress5Line,
+        "Done": IoCheckmarkDoneSharp
+    };
+    const priorityColor = {
+        "High": "red",
+        "Medium": 'orange',
+        "Low": "green"
+    };
 
     useEffect(() => {
         const fetchUserDetails = async () => {
@@ -21,22 +38,22 @@ const Dashboard = () => {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`,
                     }
-                }); 
+                });
                 if (res.ok) {
                     const { user } = await res.json();
                     setUserDetails(user);
                 } else {
                     console.error('Failed to fetch tasks');
-                    setMessage("Failed to fetch tasks")
+                    setMessage("Failed to fetch tasks");
                 }
             } catch (error) {
                 console.error('Error:', error);
-                setMessage(error)
+                setMessage(error.toString());
             }
         };
         fetchUserDetails();
-    },[id]);
-    
+    }, [id]);
+
     useEffect(() => {
         const fetchTasks = async () => {
             try {
@@ -46,7 +63,7 @@ const Dashboard = () => {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`,
                     }
-                }); 
+                });
                 if (res.ok) {
                     const { tasks } = await res.json();
                     setTaskList(tasks);
@@ -55,13 +72,13 @@ const Dashboard = () => {
                     console.error('Failed to fetch tasks');
                 }
             } catch (error) {
-                setMessage(error);
+                setMessage(error.toString());
                 console.error('Error:', error);
             }
         };
         fetchTasks();
-    },[id]);
-    // console.log('Dash');
+    }, [id]);
+
     useEffect(() => {
         if (message) {
             const timer = setTimeout(() => {
@@ -78,7 +95,6 @@ const Dashboard = () => {
     };
 
     const handleEdit = () => {
-        // navigate(`/dashboard/edit/${selectedTask._id}`, { state: { selectedTask, fullName, id } });
         navigate(`/dashboard/edit/${selectedTask._id}`, { state: { selectedTask, id } });
     };
 
@@ -103,12 +119,24 @@ const Dashboard = () => {
         }
     };
 
-
     const handleLogout = () => {
         localStorage.removeItem('token');
-        localStorage.removeItem('userId');  // Clear token from localStorage
-        navigate('/login');                // Redirect to login page
+        localStorage.removeItem('userId');
+        navigate('/login');
     };
+
+    const filteredTasks = taskList
+        .filter(task => !filterStatus || task.status === filterStatus)
+        .filter(task => !filterPriority || task.priority === filterPriority);
+
+    const priorityOrder = { "High": 3, "Medium": 2, "Low": 1 };
+    const sortedTasks = filteredTasks.sort((a, b) => {
+        if (sortOrder === 'asc') {
+            return priorityOrder[a.priority] - priorityOrder[b.priority];
+        } else {
+            return priorityOrder[b.priority] - priorityOrder[a.priority];
+        }
+    });
 
     return (
         <div className="dashboard">
@@ -117,18 +145,55 @@ const Dashboard = () => {
             <h2>{userDetails.phone}</h2>
             <button onClick={handleLogout}>Logout</button>
 
+            {/* Filter by Task Status */}
             <div>
-                {taskList.length > 0 ? (
+                <label>Filter Status: </label>
+                <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+                    <option value="">All</option>
+                    <option value="To Do">To Do</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Done">Done</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Filter Priority: </label>
+                <select value={filterPriority} onChange={(e) => setFilterPriority(e.target.value)}>
+                    <option value="">All</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Sort by Priority: </label>
+                <button onClick={() => setSortOrder('asc')}>Low to High</button>
+                <button onClick={() => setSortOrder('desc')}>High to Low</button>
+            </div>
+
+            <div>
+                {sortedTasks.length > 0 ? (
                     <ul>
-                        {taskList.map((task) => (
-                            <li
-                                onClick={() => handleTaskSelect(task)}
-                                key={task._id}
-                                style={{ cursor: 'pointer', marginBottom: '10px' }}
-                            >
-                                <span>{task.title}</span>
-                            </li>
-                        ))}
+                        {sortedTasks.map((task) => {
+                            const IconComponent = imgStatus[task.status];
+                            return (
+                                <div
+                                    onClick={() => handleTaskSelect(task)}
+                                    key={task._id}
+                                    style={{ cursor: 'pointer', marginBottom: '10px' }}
+                                >
+                                    <div style={
+                                        {
+                                            color: priorityColor[task.priority],
+                                            display: 'inline-block'
+                                        }}>
+                                        <span>{task.title}</span>
+                                        {IconComponent && <IconComponent style={{ marginLeft: '10px' }} />}
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </ul>
                 ) : (
                     <p>No tasks available. Add a Task</p>
@@ -143,7 +208,7 @@ const Dashboard = () => {
                         <p><strong>Description:</strong> {selectedTask.description}</p>
                         <p><strong>Due Date:</strong> {handleDate(selectedTask.dueDate)}</p>
                         <p><strong>Status:</strong> {selectedTask.status}</p>
-                        <p><strong>Priority:</strong>{selectedTask.priority}</p>
+                        <p><strong>Priority:</strong> {selectedTask.priority}</p>
 
                         <div>
                             <button onClick={handleEdit}>Edit Task</button>
@@ -152,9 +217,10 @@ const Dashboard = () => {
                     </div>
                 )}
             </div>
+
             {message && (
-                    <p style={{ color: 'red'}}>{message}</p>
-                )}
+                <p style={{ color: 'red' }}>{message}</p>
+            )}
             <Link to='/dashboard/add' state={id}>
                 Add Task
             </Link>
@@ -163,3 +229,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
