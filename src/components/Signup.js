@@ -31,14 +31,15 @@ function SignUp() {
                 },
                 body: JSON.stringify({ fullName, phone, email, password }),
             });
+            const data = await response.json();
+            const message =data.message
             if (response.ok) {
-                const data = await response.json();
                 console.log(data);
-                navigate('/login');
+                console.log(message);
+                navigate('/login',{status:{message}});
             } else {
-                const data = await response.json();
                 setError(true);
-                setErrorMessage(data.message || "Invalid username or password");
+                setErrorMessage(message || "Invalid username or password");
             }
         } catch (error) {
             setError(true);

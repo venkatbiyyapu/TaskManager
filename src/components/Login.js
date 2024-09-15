@@ -1,23 +1,21 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-    const [error, setError] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+    const location = useLocation();
+    const [errorMessage, setErrorMessage] = useState(location.state?.message || '');
 
     const handleInputChange = (e, setter) => {
         setter(e.target.value);
-        if (error) {
-            setError(false);
-            setErrorMessage('');
-        }
+        setErrorMessage(''); 
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
             const response = await fetch('http://localhost:3001/login', {
                 method: 'POST',
@@ -27,22 +25,26 @@ function Login() {
                 body: JSON.stringify({ email, password }),
             });
 
-            if (response.ok) { 
+            if (response.ok) {
                 const data = await response.json();
-                const {user,token}= data
-                console.log(data.user);
-                console.log(user._id);
-                console.log(token);
-                navigate('/dashboard',{state:{fullName: user.fullName, id: user._id}});
+                const { user, token } = data;
+
+                localStorage.setItem('token', token); // Store token in localStorage
+                localStorage.setItem('userId', user._id);
+                // Navigate to dashboard with user details
+                navigate('/dashboard', {
+                    state: {
+                        // fullName: user.fullName,
+                        id: user._id,
+                    }
+                });
             } else {
                 const data = await response.json();
-                setError(true);
-                setErrorMessage(data.message || "Invalid username or password");
+                setErrorMessage(data.message || "Invalid email or password.");
             }
         } catch (error) {
-            setError(true);
             setErrorMessage("An unexpected error occurred. Please try again.");
-            console.error('Error:', error);
+            console.error('Login error:', error);
         }
     };
 
@@ -70,10 +72,8 @@ function Login() {
                         required
                     />
                 </div>
-                {error && (
-                    <p style={{ color: 'red' }}>
-                        {errorMessage}
-                    </p>
+                {errorMessage && (
+                    <p style={{ color: 'red' }}>{errorMessage}</p>
                 )}
                 <button type="submit">Log In</button>
                 <p>

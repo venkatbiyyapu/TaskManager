@@ -19,11 +19,11 @@ const taskSchema = new Schema({
         enum: ['To Do', 'In Progress', 'Done'],
         required: true
     },
-    user: { 
-        type: Schema.Types.ObjectId, 
-        ref: 'User',
-        required: true 
-    }
+    priority: {
+        type: String,
+        enum: ['High', 'Medium', 'Low'],
+        required: true
+    },
 });
 
 module.exports = mongoose.model('Task', taskSchema);
