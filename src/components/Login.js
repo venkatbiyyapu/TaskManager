@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useFilter } from "./utils/FilterContext";
 
@@ -6,20 +6,21 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-    const location = useLocation();
-    const [errorMessage, setErrorMessage] = useState(location.state?.message || '');
-    console.log(location.state?.message);
-    const {setId}= useFilter();
+    // const [errorMessage, setErrorMessage] = useState('');
+
+    const { setId, message,setMessage } = useFilter();
+
     const handleInputChange = (e, setter) => {
         setter(e.target.value);
-        setErrorMessage(''); 
+        setMessage('');
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setMessage('');
 
         try {
-            const response = await fetch('http://localhost:3001/login', {
+            const response = await fetch('../login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -32,15 +33,15 @@ function Login() {
                 const { user, token } = data;
                 localStorage.setItem('token', token);
                 localStorage.setItem('userId', user._id);
-                localStorage.setItem('isAuth',true);
-                setId(localStorage.getItem('userId'))
+                localStorage.setItem('isAuth', true);
+                setId(localStorage.getItem('userId'));
                 navigate('/dashboard');
             } else {
                 const data = await response.json();
-                setErrorMessage(data.message || "Invalid email or password.");
+                setMessage(data.message || "Invalid email or password.");
             }
         } catch (error) {
-            setErrorMessage("An unexpected error occurred. Please try again.");
+            setMessage("An unexpected error occurred. Please try again.");
             console.error('Login error:', error);
         }
     };
@@ -69,8 +70,8 @@ function Login() {
                         required
                     />
                 </div>
-                {errorMessage && (
-                    <p style={{ color: 'red' }}>{errorMessage}</p>
+                {message && (
+                    <p style={{ color: 'red' }}>{message}</p>
                 )}
                 <button type="submit">Log In</button>
                 <p>
@@ -82,3 +83,4 @@ function Login() {
 }
 
 export default Login;
+

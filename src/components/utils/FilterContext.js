@@ -9,6 +9,16 @@ export const FilterProvider = ({ children }) => {
     const [sortOrder, setSortOrder] = useState('');
     const [selectedTask, setSelectedTask] = useState(null);
     const [isAuth, setIsAuth] = useState(localStorage.getItem('isAuth') || false);
+    const [message, updateMessage] = useState('');
+    const [logoutMessage, setLogoutMessage] = useState('');
+
+    const setMessage = (newMessage) => {
+        updateMessage(newMessage);
+
+        setTimeout(() => {
+            updateMessage('');
+        }, 2000);
+    };
     const clearFilters = () => {
         setFilterStatus('');
         setFilterPriority('');
@@ -31,7 +41,11 @@ export const FilterProvider = ({ children }) => {
                     setId,
                     isAuth,
                     setIsAuth,
+                    message,
+                    setMessage,
                     clearFilters,
+                    logoutMessage, 
+                    setLogoutMessage
                 }}>
             {children}
         </FilterContext.Provider>

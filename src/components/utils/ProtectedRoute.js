@@ -3,19 +3,17 @@ import { Navigate } from 'react-router-dom';
 import { useFilter } from './FilterContext';
 
 const ProtectedRoute = ({ children }) => {
-    const { isAuth, setIsAuth } = useFilter();
+    const { isAuth, setIsAuth ,setMessage, setLogoutMessage,logoutMessage} = useFilter();
     const [loading, setLoading] = useState(true);
-
+    const token = localStorage.getItem('token');
     useEffect(() => {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            setIsAuth(false);
-            setLoading(false);
-            return;
-        }
-
         const validateToken = async () => {
+            if (!token) {
+                setIsAuth(false);
+                setLoading(false);
+                return;
+            }
+
             try {
                 const response = await fetch('http://localhost:3001/validateToken', {
                     method: 'POST',
@@ -39,15 +37,23 @@ const ProtectedRoute = ({ children }) => {
         };
 
         validateToken();
-    }, [setIsAuth]);
+    }, [token, setIsAuth]);
+    
 
     if (loading) {
         return <div>Loading...</div>;
     }
 
     if (!isAuth) {
-        return <Navigate to="/login" replace state={{ message: 'User is not authenticated. Please log in first.' }} />;
+        if (logoutMessage) {
+            setMessage(logoutMessage);
+            setLogoutMessage('');
+        } else {
+            setMessage("Please login to access the page.");
+        }
+        return <Navigate to="/login" replace />;
     }
+
 
     return children;
 };

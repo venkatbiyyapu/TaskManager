@@ -4,12 +4,12 @@ import handleDate from '../utils/DateUtil';
 import { useFilter } from '../utils/FilterContext';
 export default function Edit() {
     // const location = useLocation();
-    const {selectedTask} = useFilter();
+    const {selectedTask , message ,setMessage} = useFilter();
     const [title, setTitle] = useState(selectedTask.title);
     const [description, setDescription] = useState(selectedTask.description);
     const [status, setStatus] = useState(selectedTask.status);
     const [priority, setPriority] = useState(selectedTask.priority);
-    const [error, setError] = useState('');
+    // const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const formattedDate = handleDate(selectedTask.dueDate);
@@ -33,16 +33,16 @@ export default function Edit() {
                 // navigate('/dashboard', { state: { message : data.message, filterStatus, filterPriority , sortOrder} });
                 navigate('/dashboard', { state:{ message : data.message }});
             } else {
-                setError(data.message || 'Failed to edit task');
+                setMessage(data.message || 'Failed to edit task');
             }
         } catch (error) {
-            setError('Server error. Please try again later.');
+            setMessage('Server error. Please try again later.');
         }
     };
 
     return (
         <div>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {message && <p style={{ color: 'red' }}>{message}</p>}
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Title</label>

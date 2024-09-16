@@ -3,13 +3,13 @@ import {useNavigate, Link } from 'react-router-dom';
 import { useFilter } from '../utils/FilterContext';
 
 export default function Add() {
-  const {id} = useFilter();
+  const {id, message, setMessage} = useFilter();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [status, setStatus] = useState('To Do');
   const [priority, setPriority] = useState('High');
-  const [error, setError] = useState('');
+  // const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -29,17 +29,17 @@ export default function Add() {
       if (response.ok) {
         navigate('/dashboard');
       } else {
-        setError(data.message || 'Failed to add task');
+        setMessage(data.message || 'Failed to add task');
       }
     } catch (error) {
-      setError('Server error. Please try again later.');
+      setMessage('Server error. Please try again later.');
     }
   };
 
   return (
     <div>
       <h2>Add New Task</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {message && <p style={{ color: 'red' }}>{message}</p>}
       <form onSubmit={handleSubmit}>
         <div>
           <label>Title</label>

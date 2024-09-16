@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { MdListAlt } from "react-icons/md";
 import { RiProgress5Line } from "react-icons/ri";
 import { IoCheckmarkDoneSharp } from "react-icons/io5";
@@ -7,11 +7,9 @@ import handleDate from '../utils/DateUtil';
 import { useFilter } from '../utils/FilterContext';
 
 const Dashboard = () => {
-    const location = useLocation();
     const navigate = useNavigate();
     const [taskList, setTaskList] = useState([]);
     const [userDetails, setUserDetails] = useState({});
-    const [message, setMessage] = useState(location.state?.message || '');
     const token = localStorage.getItem('token');
     const {
         filterStatus,
@@ -23,7 +21,12 @@ const Dashboard = () => {
         selectedTask,
         setSelectedTask,
         id,
+        message,
+        setMessage,
         clearFilters,
+        isAuth,
+        setIsAuth,
+        setLogoutMessage
     } = useFilter();
     
 
@@ -88,16 +91,6 @@ const Dashboard = () => {
         fetchTasks();
     }, [id]);
 
-    useEffect(() => {
-        if (message) {
-            const timer = setTimeout(() => {
-                setMessage('');
-                navigate(location.pathname, { replace: true, state: {} });
-            }, 1000);
-            return () => clearTimeout(timer);
-        }
-    }, [message]);
-
     const handleTaskSelect = (task) => {
         setSelectedTask(task);
         document.getElementById("taskContainerDetails").style.display = document.getElementById("taskContainerDetails").style.display === 'none' ? "block" : 'none';
@@ -133,7 +126,9 @@ const Dashboard = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
         localStorage.removeItem('isAuth');
-        navigate('/login',{state:{message:''}});
+        setLogoutMessage('Logged Out Successfully');
+        navigate('/login');
+
     };
 
     const filteredTasks = taskList

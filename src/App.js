@@ -10,32 +10,41 @@ import { useFilter } from './components/utils/FilterContext';
 import './style.css';
 
 function App() {
-  const {isAuth} = useFilter();
+  const { isAuth} = useFilter();
   return (
     <Router>
       <Routes>
-        <Route path="/" element={isAuth ?<Navigate to="/dashboard" replace /> :<Navigate to="/login" replace />}/>
+        <Route path="/" element={<Navigate to={isAuth ? "/dashboard" : "/login"} replace />} />
+        <Route path="/login" element={isAuth ? <Navigate to="/dashboard" replace /> : <Login />} />
+        <Route path="/signup" element={isAuth ? <Navigate to="/dashboard" replace /> : <Signup />} />
 
-        <Route path="/login" element={isAuth ?<Navigate to="/dashboard" replace /> : <Login />} />
-        <Route path="/signup" element={isAuth ?<Navigate to="/dashboard" replace /> : <Signup />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute isAuth={isAuth}>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/add"
+          element={
+            <ProtectedRoute isAuth={isAuth}>
+              <Add />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/edit/:id"
+          element={
+            <ProtectedRoute isAuth={isAuth}>
+              <Edit />
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path="/dashboard" element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        } />
-        <Route path="/dashboard/add" element={
-          <ProtectedRoute>
-            <Add />
-          </ProtectedRoute>
-        } />
-        <Route path="/dashboard/edit/:id" element={
-          <ProtectedRoute>
-            <Edit />
-          </ProtectedRoute>
-        } />
-
-        <Route path="*" element={<Navigate to="/login" state={{ message: 'Page Not Found. Redirected to Login.!!' }} replace />} />
+        {/* Fallback route to handle invalid URLs */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
   );

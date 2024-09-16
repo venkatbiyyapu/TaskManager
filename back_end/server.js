@@ -26,7 +26,6 @@ const generateToken = (user) => {
 };
 
 const authenticateJWT = (req, res, next) => {
-    console.log("Authenticating");
     const token = req.headers.authorization?.split(' ')[1];
     if (!token) {
         console.log("error occurred");
@@ -87,7 +86,6 @@ app.get('/getTasks/:userId', async (req, res) => {
     try {
         const user = await User.findById(userId).populate('tasks');
         if (!user) return res.status(404).json({ message: 'User not found' });
-
         res.status(200).json({ tasks: user.tasks });
     } catch (error) {
         console.error('Error fetching tasks:', error);
@@ -112,7 +110,6 @@ app.get('/getUserDetails/:userId', async (req, res) => {
 app.post('/addTask/:userId', authenticateJWT, async (req, res) => {
     const { userId } = req.params;
     const { title, description, dueDate, status , priority } = req.body;
-    // console.log( title, description, dueDate, status , priority );
 
     try {
         const newTask = new Task({ title, description, dueDate, status, priority });
@@ -173,7 +170,6 @@ app.delete('/deleteTask/:taskId', authenticateJWT, async (req, res) => {
 });
 
 app.post('/validateToken', authenticateJWT, (req, res) => {
-    console.log("validating");
     res.status(200).json({ message: 'Token is valid'});
 });
 

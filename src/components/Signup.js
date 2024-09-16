@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import validatePassword from "./utils/ValidationUtil";
+import { useFilter } from "./utils/FilterContext";
 
 function SignUp() {
     const [email, setEmail] = useState("");
@@ -9,22 +10,18 @@ function SignUp() {
     const [fullName, setFullName] = useState("");
     const [phone, setPhone] = useState('');
     const navigate = useNavigate();
-    const [error, setError] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+    const {message, setMessage} = useFilter();
+
 
     const handleInputChange = (e, setter) => {
         setter(e.target.value);
-        if (error) {
-            setError(false);
-            setErrorMessage('');
-        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             validatePassword(password, conpassword);
-            const response = await fetch('http://localhost:3001/signup', {
+            const response = await fetch('../signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -34,16 +31,12 @@ function SignUp() {
             const data = await response.json();
             const message =data.message
             if (response.ok) {
-                console.log(data);
-                console.log(message);
                 navigate('/login',{status:{message}});
             } else {
-                setError(true);
-                setErrorMessage(message || "Invalid username or password");
+                setMessage(message || "Invalid username or password");
             }
         } catch (error) {
-            setError(true);
-            setErrorMessage(error.message);
+            setMessage(error.message);
             console.error('Error:', error.message);
         }
     };
@@ -108,9 +101,9 @@ function SignUp() {
                         required
                     />
                 </div>
-                {error && (
+                {message && (
                     <p style={{ color: 'red' }}>
-                        {errorMessage}
+                        {message}
                     </p>
                 )}
                 <button type="submit">Sign Up</button>
