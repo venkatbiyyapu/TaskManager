@@ -28,7 +28,6 @@ const generateToken = (user) => {
 const authenticateJWT = (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
     if (!token) {
-        console.log("error occurred");
         return res.status(403).json({ message: 'Authorization token missing' });
     }
 
@@ -135,7 +134,6 @@ app.put('/editTask/:taskId', authenticateJWT, async (req, res) => {
 
     try {
         const task = await Task.findById(taskId);
-        console.log(task)
         if (!task) return res.status(404).json({ message: 'Task not found' });
 
         if (title) task.title = title;
