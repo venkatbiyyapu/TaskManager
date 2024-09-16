@@ -1,6 +1,3 @@
-Here's the updated `README.md` file including the multi-user login rerouting feature:
-
----
 
 # Task Manager
 
