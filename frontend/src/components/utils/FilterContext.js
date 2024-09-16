@@ -24,6 +24,10 @@ export const FilterProvider = ({ children }) => {
         setFilterStatus('');
         setFilterPriority('');
         setSortOrder(null);
+        document.getElementById('one').style.background = 'white';
+        document.getElementById('one').style.color = 'black';
+        document.getElementById('two').style.background = 'white';
+        document.getElementById('two').style.color = 'black';
     }
 
     return (

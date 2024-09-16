@@ -45,41 +45,80 @@ function Login() {
             console.error('Login error:', error);
         }
     };
-
     return (
-        <div className="container">
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Email:</label>
-                    <input
-                        type="email"
-                        value={email}
-                        placeholder="email"
-                        autoComplete="on"
-                        onChange={(e) => handleInputChange(e, setEmail)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Password:</label>
-                    <input
-                        type="password"
-                        value={password}
-                        placeholder="password"
-                        onChange={(e) => handleInputChange(e, setPassword)}
-                        required
-                    />
-                </div>
-                {message && (
-                    <p style={{ color: 'red' }}>{message}</p>
-                )}
-                <button type="submit">Log In</button>
-                <p>
-                    Don't have an account? <Link to="/signup">Sign Up</Link>
-                </p>
-            </form>
+
+        <div className="login-signup-overlay overlay">
+            <div className="form">
+                <h3>TaskTrack</h3>
+                <form onSubmit={handleSubmit} className="form-container">
+                    <div className="form-fields">
+                        <label>Email:</label>
+                        <input
+                            type="email"
+                            value={email}
+                            placeholder="email"
+                            autoComplete="on"
+                            onChange={(e) => handleInputChange(e, setEmail)}
+                            required
+                        />
+                    </div>
+                    <div className="form-fields">
+                        <label>Password:</label>
+                        <input
+                            type="password"
+                            value={password}
+                            placeholder="password"
+                            onChange={(e) => handleInputChange(e, setPassword)}
+                            required
+                        />
+                    </div>
+                    {message && (
+                        <p style={{ color: 'red' }}>{message}</p>
+                    )}
+                    <button type="submit" className="btn btn-gradient-border btn-glow">Log In</button>
+                    <p className="ask">
+                        <span>Don't have an account?</span>
+                        <Link to="/signup">Sign Up</Link>
+                    </p>
+                </form>
+            </div>
         </div>
     );
+
+    // return (
+    //     <div className="container">
+    //         <form onSubmit={handleSubmit}>
+    //             <div>
+    //                 <label>Email:</label>
+    //                 <input
+    //                     type="email"
+    //                     value={email}
+    //                     placeholder="email"
+    //                     autoComplete="on"
+    //                     onChange={(e) => handleInputChange(e, setEmail)}
+    //                     required
+    //                 />
+    //             </div>
+    //             <div>
+    //                 <label>Password:</label>
+    //                 <input
+    //                     type="password"
+    //                     value={password}
+    //                     placeholder="password"
+    //                     onChange={(e) => handleInputChange(e, setPassword)}
+    //                     required
+    //                 />
+    //             </div>
+    //             {message && (
+    //                 <p style={{ color: 'red' }}>{message}</p>
+    //             )}
+    //             <button type="submit">Log In</button>
+    //             <p>
+    //                 Don't have an account? <Link to="/signup">Sign Up</Link>
+    //             </p>
+    //         </form>
+    //     </div>
+    // );
 }
 
 export default Login;
