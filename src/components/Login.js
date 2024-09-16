@@ -8,6 +8,7 @@ function Login() {
     const navigate = useNavigate();
     const location = useLocation();
     const [errorMessage, setErrorMessage] = useState(location.state?.message || '');
+    console.log(location.state?.message);
     const {setId}= useFilter();
     const handleInputChange = (e, setter) => {
         setter(e.target.value);

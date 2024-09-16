@@ -1,6 +1,6 @@
 import React, { useState} from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import handleDate from '../utils/Date';
+import handleDate from '../utils/DateUtil';
 import { useFilter } from '../utils/FilterContext';
 export default function Edit() {
     // const location = useLocation();

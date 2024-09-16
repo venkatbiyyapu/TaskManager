@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { MdListAlt } from "react-icons/md";
 import { RiProgress5Line } from "react-icons/ri";
 import { IoCheckmarkDoneSharp } from "react-icons/io5";
-import handleDate from '../utils/Date';
+import handleDate from '../utils/DateUtil';
 import { useFilter } from '../utils/FilterContext';
 
 const Dashboard = () => {
@@ -133,7 +133,7 @@ const Dashboard = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
         localStorage.removeItem('isAuth');
-        navigate('/login');
+        navigate('/login',{state:{message:''}});
     };
 
     const filteredTasks = taskList
