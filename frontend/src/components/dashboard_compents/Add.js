@@ -3,7 +3,7 @@ import {useNavigate, Link } from 'react-router-dom';
 import { useFilter } from '../utils/FilterContext';
 
 export default function Add() {
-  const {id, message, setMessage} = useFilter();
+  const {id, message, setMessage , backendUrl} = useFilter();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
@@ -17,7 +17,7 @@ export default function Add() {
     const taskData = { title, description, dueDate, status, priority };
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`/addTask/${id}`, {
+      const response = await fetch(`${backendUrl}/addTask/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

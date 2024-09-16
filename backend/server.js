@@ -16,7 +16,11 @@ app.use(express.json());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect(process.env.MONGO_URI || "mongodb://localhost:27017/TaskTracker", { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGO_URI || "mongodb://localhost:27017/TaskTracker",
+    {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
     .then(() => console.log("MongoDB Connected"))
     .catch(err => console.error("MongoDB connection error:", err));
 
@@ -36,7 +40,7 @@ const authenticateJWT = (req, res, next) => {
             const message = err.name === 'TokenExpiredError' ? 'Token expired' : 'Invalid token';
             return res.status(401).json({ message });
         }
-        req.user = user; 
+        req.user = user;
         next();
     });
 };
@@ -98,7 +102,7 @@ app.get('/getUserDetails/:userId', async (req, res) => {
         const user = await User.findById(userId)
         if (!user) return res.status(404).json({ message: 'User not found' });
 
-        res.status(200).json({ user});
+        res.status(200).json({ user });
     } catch (error) {
         console.error('Error fetching tasks:', error);
         res.status(500).json({ message: 'Server error' });
@@ -108,7 +112,7 @@ app.get('/getUserDetails/:userId', async (req, res) => {
 
 app.post('/addTask/:userId', authenticateJWT, async (req, res) => {
     const { userId } = req.params;
-    const { title, description, dueDate, status , priority } = req.body;
+    const { title, description, dueDate, status, priority } = req.body;
 
     try {
         const newTask = new Task({ title, description, dueDate, status, priority });
@@ -168,7 +172,7 @@ app.delete('/deleteTask/:taskId', authenticateJWT, async (req, res) => {
 });
 
 app.post('/validateToken', authenticateJWT, (req, res) => {
-    res.status(200).json({ message: 'Token is valid'});
+    res.status(200).json({ message: 'Token is valid' });
 });
 
 app.listen(PORT, () => {

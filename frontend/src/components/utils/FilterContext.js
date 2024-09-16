@@ -11,6 +11,7 @@ export const FilterProvider = ({ children }) => {
     const [isAuth, setIsAuth] = useState(localStorage.getItem('isAuth') || false);
     const [message, updateMessage] = useState('');
     const [logoutMessage, setLogoutMessage] = useState('');
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3001';
 
     const setMessage = (newMessage) => {
         updateMessage(newMessage);
@@ -45,7 +46,8 @@ export const FilterProvider = ({ children }) => {
                     setMessage,
                     clearFilters,
                     logoutMessage, 
-                    setLogoutMessage
+                    setLogoutMessage,
+                    backendUrl
                 }}>
             {children}
         </FilterContext.Provider>

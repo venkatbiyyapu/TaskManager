@@ -10,7 +10,7 @@ function SignUp() {
     const [fullName, setFullName] = useState("");
     const [phone, setPhone] = useState('');
     const navigate = useNavigate();
-    const {message, setMessage} = useFilter();
+    const {message, setMessage, backendUrl} = useFilter();
 
 
     const handleInputChange = (e, setter) => {
@@ -21,7 +21,7 @@ function SignUp() {
         e.preventDefault();
         try {
             validatePassword(password, conpassword);
-            const response = await fetch('../signup', {
+            const response = await fetch(`${backendUrl}/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

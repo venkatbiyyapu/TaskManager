@@ -24,9 +24,8 @@ const Dashboard = () => {
         message,
         setMessage,
         clearFilters,
-        isAuth,
-        setIsAuth,
-        setLogoutMessage
+        setLogoutMessage,
+        backendUrl
     } = useFilter();
     
 
@@ -44,7 +43,7 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
-                const res = await fetch(`/getUserDetails/${id}`, {
+                const res = await fetch(`${backendUrl}/getUserDetails/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -69,7 +68,7 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchTasks = async () => {
             try {
-                const res = await fetch(`/getTasks/${id}`, {
+                const res = await fetch(`${backendUrl}/getTasks/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -102,7 +101,7 @@ const Dashboard = () => {
 
     const handleDelete = async () => {
         try {
-            const response = await fetch(`/deleteTask/${selectedTask._id}`, {
+            const response = await fetch(`${backendUrl}/deleteTask/${selectedTask._id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -126,7 +125,7 @@ const Dashboard = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
         localStorage.removeItem('isAuth');
-        setLogoutMessage('Logged Out Successfully');
+        setLogoutMessage('Logged out successfully..Please login again!');
         navigate('/login');
 
     };

@@ -8,7 +8,7 @@ function Login() {
     const navigate = useNavigate();
     // const [errorMessage, setErrorMessage] = useState('');
 
-    const { setId, message,setMessage } = useFilter();
+    const { setId, message,setMessage,backendUrl } = useFilter();
 
     const handleInputChange = (e, setter) => {
         setter(e.target.value);
@@ -20,7 +20,7 @@ function Login() {
         setMessage('');
 
         try {
-            const response = await fetch('../login', {
+            const response = await fetch(`${backendUrl}/login `, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

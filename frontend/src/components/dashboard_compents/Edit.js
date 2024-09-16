@@ -4,7 +4,7 @@ import handleDate from '../utils/DateUtil';
 import { useFilter } from '../utils/FilterContext';
 export default function Edit() {
     // const location = useLocation();
-    const {selectedTask , message ,setMessage} = useFilter();
+    const {selectedTask , message ,setMessage , backendUrl} = useFilter();
     const [title, setTitle] = useState(selectedTask.title);
     const [description, setDescription] = useState(selectedTask.description);
     const [status, setStatus] = useState(selectedTask.status);
@@ -20,7 +20,7 @@ export default function Edit() {
         const taskData = { title, description, dueDate, status, priority};
         const token = localStorage.getItem('token');
         try {
-            const response = await fetch(`../../editTask/${selectedTask._id}`, {
+            const response = await fetch(`${backendUrl}/editTask/${selectedTask._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
