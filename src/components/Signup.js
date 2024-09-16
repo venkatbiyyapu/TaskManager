@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import validatePassword from "./utils/validation";
+import validatePassword from "./utils/Validation";
 
 function SignUp() {
     const [email, setEmail] = useState("");

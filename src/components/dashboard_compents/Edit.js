@@ -1,11 +1,10 @@
 import React, { useState} from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
-import handleDate from '../utils/date';
-
+import { useNavigate, Link } from 'react-router-dom';
+import handleDate from '../utils/Date';
+import { useFilter } from '../utils/FilterContext';
 export default function Edit() {
-    const location = useLocation();
-    const { selectedTask, filterStatus, filterPriority , sortOrder } = location.state || {};
-    const id = localStorage.getItem("userId");
+    // const location = useLocation();
+    const {selectedTask} = useFilter();
     const [title, setTitle] = useState(selectedTask.title);
     const [description, setDescription] = useState(selectedTask.description);
     const [status, setStatus] = useState(selectedTask.status);
@@ -31,7 +30,8 @@ export default function Edit() {
             });
             const data = await response.json();
             if (response.ok) {
-                navigate('/dashboard', { state: { id , message : data.message, filterStatus, filterPriority , sortOrder} });
+                // navigate('/dashboard', { state: { message : data.message, filterStatus, filterPriority , sortOrder} });
+                navigate('/dashboard', { state:{ message : data.message }});
             } else {
                 setError(data.message || 'Failed to edit task');
             }
@@ -89,7 +89,7 @@ export default function Edit() {
 
                 </div>
                 <button type="submit">Save</button>
-                <Link to="/dashboard" state={{filterStatus , filterPriority , sortOrder}} >Cancel</Link>
+                <Link to="/dashboard" >Cancel</Link>
             </form>
         </div>
     );

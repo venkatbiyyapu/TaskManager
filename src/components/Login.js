@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useFilter } from "./utils/FilterContext";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -7,7 +8,7 @@ function Login() {
     const navigate = useNavigate();
     const location = useLocation();
     const [errorMessage, setErrorMessage] = useState(location.state?.message || '');
-
+    const {setId}= useFilter();
     const handleInputChange = (e, setter) => {
         setter(e.target.value);
         setErrorMessage(''); 
@@ -28,14 +29,11 @@ function Login() {
             if (response.ok) {
                 const data = await response.json();
                 const { user, token } = data;
-
                 localStorage.setItem('token', token);
                 localStorage.setItem('userId', user._id);
-                navigate('/dashboard', {
-                    state: {
-                        id: user._id,
-                    }
-                });
+                localStorage.setItem('isAuth',true);
+                setId(localStorage.getItem('userId'))
+                navigate('/dashboard');
             } else {
                 const data = await response.json();
                 setErrorMessage(data.message || "Invalid email or password.");

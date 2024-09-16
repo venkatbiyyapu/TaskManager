@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
-
+import {useNavigate, Link } from 'react-router-dom';
+import { useFilter } from '../utils/FilterContext';
 
 export default function Add() {
-  const location = useLocation();
-  const id = localStorage.getItem("userId");
+  const {id} = useFilter();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [status, setStatus] = useState('To Do');
   const [priority, setPriority] = useState('High');
-  const {filterStatus, filterPriority , sortOrder } = location.state || {};
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -29,8 +27,7 @@ export default function Add() {
       });
       const data = await response.json();
       if (response.ok) {
-        navigate('/dashboard', { state: {message:data.message, filterStatus, filterPriority, sortOrder
-        } });
+        navigate('/dashboard');
       } else {
         setError(data.message || 'Failed to add task');
       }
@@ -87,7 +84,7 @@ export default function Add() {
           </select>
         </div>
         <button type="submit">Add</button>
-        <Link to="/dashboard" state={{filterStatus , filterPriority , sortOrder}}>Cancel</Link>
+        <Link to="/dashboard">Cancel</Link>
       </form>
     </div>
   );

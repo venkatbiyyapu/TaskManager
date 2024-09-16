@@ -3,20 +3,29 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { MdListAlt } from "react-icons/md";
 import { RiProgress5Line } from "react-icons/ri";
 import { IoCheckmarkDoneSharp } from "react-icons/io5";
-import handleDate from '../utils/date';
+import handleDate from '../utils/Date';
+import { useFilter } from '../utils/FilterContext';
 
 const Dashboard = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [taskList, setTaskList] = useState([]);
-    const [selectedTask, setSelectedTask] = useState(null);
     const [userDetails, setUserDetails] = useState({});
-    const [filterStatus, setFilterStatus] = useState(location.state?.filterStatus ||'');
-    const [filterPriority, setFilterPriority] = useState(location.state?.filterPriority ||'');
-    const [sortOrder, setSortOrder] = useState(location.state?.sortOrder || "asc");
     const [message, setMessage] = useState(location.state?.message || '');
-    const id = localStorage.getItem("userId");
     const token = localStorage.getItem('token');
+    const {
+        filterStatus,
+        setFilterStatus,
+        filterPriority,
+        setFilterPriority,
+        sortOrder,
+        setSortOrder,
+        selectedTask,
+        setSelectedTask,
+        id,
+        clearFilters,
+    } = useFilter();
+    
 
     const imgStatus = {
         "To Do": MdListAlt,
@@ -28,12 +37,6 @@ const Dashboard = () => {
         "Medium": 'orange',
         "Low": "green"
     };
-
-    const clearFilter = ()=>{
-        setFilterPriority('');
-        setFilterStatus("");
-        setSortOrder("asc");
-    }
 
     useEffect(() => {
         const fetchUserDetails = async () => {
@@ -101,7 +104,7 @@ const Dashboard = () => {
     };
 
     const handleEdit = () => {
-        navigate(`/dashboard/edit/${selectedTask._id}`, { state: { selectedTask, filterStatus, filterPriority , sortOrder } });
+        navigate(`/dashboard/edit/${selectedTask._id}`);
     };
 
     const handleDelete = async () => {
@@ -126,8 +129,10 @@ const Dashboard = () => {
     };
 
     const handleLogout = () => {
+        clearFilters();
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
+        localStorage.removeItem('isAuth');
         navigate('/login');
     };
 
@@ -136,13 +141,15 @@ const Dashboard = () => {
         .filter(task => !filterPriority || task.priority === filterPriority);
 
     const priorityOrder = { "High": 3, "Medium": 2, "Low": 1 };
-    const sortedTasks = filteredTasks.sort((a, b) => {
+    const sortedTasks = sortOrder
+    ? filteredTasks.sort((a, b) => {
         if (sortOrder === 'asc') {
             return priorityOrder[a.priority] - priorityOrder[b.priority];
         } else {
             return priorityOrder[b.priority] - priorityOrder[a.priority];
         }
-    });
+    })
+    : filteredTasks; 
 
     return (
         <div className="dashboard">
@@ -151,7 +158,7 @@ const Dashboard = () => {
             <h2>{userDetails.phone}</h2>
             <button onClick={handleLogout}>Logout</button>
 
-            {/* Filter by Task Status */}
+
             <div>
                 <label>Filter Status: </label>
                 <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
@@ -177,7 +184,7 @@ const Dashboard = () => {
                 <button onClick={() => setSortOrder('asc')}>Low to High</button>
                 <button onClick={() => setSortOrder('desc')}>High to Low</button>
             </div>
-            <button onClick={clearFilter}>Clear Filters</button>
+            <button onClick={clearFilters}>Clear Filters</button>
 
             <div>
                 {sortedTasks.length > 0 ? (
@@ -228,7 +235,7 @@ const Dashboard = () => {
             {message && (
                 <p style={{ color: 'red' }}>{message}</p>
             )}
-            <Link to='/dashboard/add' state={{filterStatus , filterPriority , sortOrder}}>
+            <Link to='/dashboard/add'>
                 Add Task
             </Link>
         </div>

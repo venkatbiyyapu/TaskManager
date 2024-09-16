@@ -26,9 +26,10 @@ const generateToken = (user) => {
 };
 
 const authenticateJWT = (req, res, next) => {
-    // console.log("Authenticating");
+    console.log("Authenticating");
     const token = req.headers.authorization?.split(' ')[1];
     if (!token) {
+        console.log("error occurred");
         return res.status(403).json({ message: 'Authorization token missing' });
     }
 
@@ -172,6 +173,7 @@ app.delete('/deleteTask/:taskId', authenticateJWT, async (req, res) => {
 });
 
 app.post('/validateToken', authenticateJWT, (req, res) => {
+    console.log("validating");
     res.status(200).json({ message: 'Token is valid'});
 });
 
