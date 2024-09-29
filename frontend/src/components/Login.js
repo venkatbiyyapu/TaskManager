@@ -84,41 +84,6 @@ function Login() {
             </div>
         </div>
     );
-
-    // return (
-    //     <div className="container">
-    //         <form onSubmit={handleSubmit}>
-    //             <div>
-    //                 <label>Email:</label>
-    //                 <input
-    //                     type="email"
-    //                     value={email}
-    //                     placeholder="email"
-    //                     autoComplete="on"
-    //                     onChange={(e) => handleInputChange(e, setEmail)}
-    //                     required
-    //                 />
-    //             </div>
-    //             <div>
-    //                 <label>Password:</label>
-    //                 <input
-    //                     type="password"
-    //                     value={password}
-    //                     placeholder="password"
-    //                     onChange={(e) => handleInputChange(e, setPassword)}
-    //                     required
-    //                 />
-    //             </div>
-    //             {message && (
-    //                 <p style={{ color: 'red' }}>{message}</p>
-    //             )}
-    //             <button type="submit">Log In</button>
-    //             <p>
-    //                 Don't have an account? <Link to="/signup">Sign Up</Link>
-    //             </p>
-    //         </form>
-    //     </div>
-    // );
 }
 
 export default Login;
