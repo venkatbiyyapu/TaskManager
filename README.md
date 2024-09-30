@@ -1,7 +1,3 @@
-Here's the updated `README.md` file including the multi-user login rerouting feature:
-
----
-
 # Task Manager
 
 Task Manager is a full-stack web application designed for efficient task management. It features a React frontend and a Node.js backend with MongoDB for data storage. The application includes user authentication, secured routes, password hashing, JWT-based authentication, and advanced task management functionalities.

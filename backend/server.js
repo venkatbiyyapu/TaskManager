@@ -46,9 +46,9 @@ const authenticateJWT = (req, res, next) => {
 };
 
 app.get('/dashboard', authenticateJWT, (req, res) => {
-    // You could optionally handle some cleanup here, like token invalidation (if using token blacklisting)
     return res.status(200).json({ message: 'User logged out successfully' });
 });
+
 
 app.post("/login", async (req, res) => {
     const { email, password } = req.body;
