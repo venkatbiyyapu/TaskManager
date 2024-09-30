@@ -114,12 +114,14 @@ const Dashboard = () => {
                     'Authorization': `Bearer ${token}`,
                 }
             });
-
+            const data = await response.json();
             if (response.ok) {
                 setTaskList(taskList.filter(task => task._id !== selectedTask._id));
                 document.getElementById("taskContainerDetails").style.display = "none";
+                setMessage(data.message)
             } else {
                 console.error('Failed to delete task');
+                setMessage('Failed to delete task')
             }
         } catch (error) {
             console.error('Error deleting task:', error);
@@ -211,7 +213,6 @@ const Dashboard = () => {
                         <div className='sort'>
                             <p onClick={() => sorting('asc', 'one')} id='one' className='btns'>Low to High</p>
                             <p onClick={() => sorting('desc', 'two')} id='two' className='btns'>High to Low</p>
-                            {/* <p onClick={() => setSortOrder('asc')}>Low to High</p>
                             <p onClick={() => setSortOrder('desc')}>High to Low</p> */}
                         </div>
                     </div>

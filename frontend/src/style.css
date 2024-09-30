@@ -54,26 +54,6 @@ body {
     outline: none;
     border: none;
 }
-
-.sign-up-btn {
-    display: block;
-    padding-block: 5px;
-    padding-inline: 25px;
-    margin-block: 20px;
-    margin-inline: auto;
-    border-radius: 5px;
-    font-weight: 600;
-    cursor: pointer;
-    color: white;
-    background-color: black;
-    border: 2px solid black;
-    width: 100%;
-}
-
-.sign-up-btn:hover {
-    border-color: white;
-}
-
 .ask {
     display: flex;
     justify-content: center;

@@ -3,7 +3,7 @@ import React, { createContext, useState, useContext } from 'react';
 const FilterContext = createContext();
 
 export const FilterProvider = ({ children }) => {
-    const [id,setId] = useState(localStorage.getItem('userId') || '')
+    const [id, setId] = useState(localStorage.getItem('userId') || '')
     const [filterStatus, setFilterStatus] = useState('');
     const [filterPriority, setFilterPriority] = useState('');
     const [sortOrder, setSortOrder] = useState('');
@@ -15,7 +15,6 @@ export const FilterProvider = ({ children }) => {
 
     const setMessage = (newMessage) => {
         updateMessage(newMessage);
-
         setTimeout(() => {
             updateMessage('');
         }, 2000);

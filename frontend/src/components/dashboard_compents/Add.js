@@ -9,7 +9,6 @@ export default function Add() {
   const [dueDate, setDueDate] = useState('');
   const [status, setStatus] = useState('To Do');
   const [priority, setPriority] = useState('High');
-  // const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -28,6 +27,7 @@ export default function Add() {
       const data = await response.json();
       if (response.ok) {
         navigate('/dashboard');
+        setMessage(data.message);
       } else {
         setMessage(data.message || 'Failed to add task');
       }

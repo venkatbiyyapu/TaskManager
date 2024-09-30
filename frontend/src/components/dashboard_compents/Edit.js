@@ -3,13 +3,11 @@ import { useNavigate, Link } from 'react-router-dom';
 import handleDate from '../utils/DateUtil';
 import { useFilter } from '../utils/FilterContext';
 export default function Edit() {
-    // const location = useLocation();
     const {selectedTask , message ,setMessage , backendUrl} = useFilter();
     const [title, setTitle] = useState(selectedTask.title);
     const [description, setDescription] = useState(selectedTask.description);
     const [status, setStatus] = useState(selectedTask.status);
     const [priority, setPriority] = useState(selectedTask.priority);
-    // const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const formattedDate = handleDate(selectedTask.dueDate);
@@ -30,8 +28,8 @@ export default function Edit() {
             });
             const data = await response.json();
             if (response.ok) {
-                // navigate('/dashboard', { state: { message : data.message, filterStatus, filterPriority , sortOrder} });
-                navigate('/dashboard', { state:{ message : data.message }});
+                navigate('/dashboard');
+                setMessage(data.message);
             } else {
                 setMessage(data.message || 'Failed to edit task');
             }
