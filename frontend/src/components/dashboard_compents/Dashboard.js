@@ -213,7 +213,7 @@ const Dashboard = () => {
                         <div className='sort'>
                             <p onClick={() => sorting('asc', 'one')} id='one' className='btns'>Low to High</p>
                             <p onClick={() => sorting('desc', 'two')} id='two' className='btns'>High to Low</p>
-                            <p onClick={() => setSortOrder('desc')}>High to Low</p> */}
+                            <p onClick={() => setSortOrder('desc')}>High to Low</p>
                         </div>
                     </div>
                     <div onClick={clearFilters} className='cross btns'><RxCross2 /></div>
